@@ -15,8 +15,7 @@ class CategoryController extends Controller
         $categories = Category::all();
 
         return response()->json([
-            'status' => true,
-            'category' => $categories
+            'categories' => $categories
         ], 200);
     }
 
@@ -37,7 +36,6 @@ class CategoryController extends Controller
         $category->save();
 
         return response()->json([
-            'status' => true,
             'message' => "Category Created Successfully!!",
             'category' => $category
         ], 200);
@@ -45,7 +43,10 @@ class CategoryController extends Controller
 
     public function show(Category $category)
     {
-        //
+        return response()->json([
+            'message' => "Category Showed Successfully!!",
+            'category' => $category
+        ], 200);
     }
 
     public function edit(Category $category)
@@ -57,13 +58,12 @@ class CategoryController extends Controller
     {
         //insert data
         $category->name = $request->name;
-        $category->slug = Str::slug($request->product_name, '-');
+        $category->slug = Str::slug($request->name);
 
         //save to database
         $category->update();
 
         return response()->json([
-            'status' => true,
             'message' => "Category updated Successfully!!",
             'category' => $category
         ], 200);
@@ -74,7 +74,6 @@ class CategoryController extends Controller
         $category->delete();
 
         return response()->json([
-            'status' => true,
             'message' => "Category Deleted Successfully!!",
         ], 200);
     }
