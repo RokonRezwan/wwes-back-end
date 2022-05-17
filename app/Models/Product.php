@@ -23,6 +23,6 @@ class Product extends Model
 
     public function prices()
     {
-        return $this->belongsTo(Price::class);
+        return $this->hasMany(Price::class)->with('priceTypes');
     }
 }

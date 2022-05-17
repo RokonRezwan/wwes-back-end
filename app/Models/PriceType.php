@@ -15,7 +15,11 @@ class PriceType extends Model
         'name',
     ];
 
-    public function prices()
+  /*   public function prices()
+    {
+        return $this->hasMany(Price::class);
+    } */
+    public function priceType()
     {
         return $this->belongsTo(Price::class);
     }
