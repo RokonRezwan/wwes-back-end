@@ -32,6 +32,7 @@ class ProductController extends Controller
         $product->name = $request->name;
         $product->category_id = $request->category_id;
         $product->slug = Str::slug($request->name);
+        $product->description = $request->description;
 
         //save to database
         $product->save();
@@ -56,10 +57,7 @@ class ProductController extends Controller
             $product->productPrices()->insert($values);
         } */
 
-        return response()->json([
-            'message' => "Product Created Successfully!!",
-            'product' => $product
-        ], 200);
+        return redirect('http://127.0.0.1:7000/')->with('status','Product has been Created Successfully !');
     }
 
     public function show(Product $product)
@@ -80,8 +78,10 @@ class ProductController extends Controller
     {
         //insert data
         $product->name = $request->name;
+        $product->category_id = $request->category_id;
         $product->slug = Str::slug($request->name);
-
+        $product->description = $request->description;
+        
         //save to database
         $product->update();
 
