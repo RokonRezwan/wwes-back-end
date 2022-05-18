@@ -35,10 +35,7 @@ class CategoryController extends Controller
         //save to database
         $category->save();
 
-        return response()->json([
-            'message' => "Category Created Successfully!!",
-            'category' => $category
-        ], 200);
+        return redirect('http://127.0.0.1:7000/categories/index')->with('status','Category has been Created Successfully !');
     }
 
     public function show(Category $category)
@@ -63,18 +60,13 @@ class CategoryController extends Controller
         //save to database
         $category->update();
 
-        return response()->json([
-            'message' => "Category updated Successfully!!",
-            'category' => $category
-        ], 200);
+        return redirect('http://127.0.0.1:7000/categories/index')->with('status','Category has been Updated Successfully !');
     }
 
     public function destroy(Category $category)
     {
         $category->delete();
 
-        return response()->json([
-            'message' => "Category Deleted Successfully!!",
-        ], 200);
+        return redirect('http://127.0.0.1:7000/categories/index')->with('status','Category has been Deleted Successfully !');
     }
 }

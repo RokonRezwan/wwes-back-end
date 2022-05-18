@@ -32,10 +32,7 @@ class PriceTypeController extends Controller
         //save to database
         $priceType->save();
 
-        return response()->json([
-            'message' => "Price Created Successfully!!",
-            'priceType' => $priceType
-        ], 200);
+        return redirect('http://127.0.0.1:7000/price-types/index')->with('status','Price Type has been Created Successfully !');
     }
 
     public function show(PriceType $priceType)
@@ -59,18 +56,13 @@ class PriceTypeController extends Controller
         //save to database
         $priceType->update();
 
-        return response()->json([
-            'message' => "Price updated Successfully!!",
-            'price' => $priceType
-        ], 200);
+        return redirect('http://127.0.0.1:7000/price-types/index')->with('status','Price Type has been Updated Successfully !');
     }
 
     public function destroy(PriceType $priceType)
     {
         $priceType->delete();
 
-        return response()->json([
-            'message' => "Price Deleted Successfully!!",
-        ], 200);
+        return redirect('http://127.0.0.1:7000/price-types/index')->with('status','Price Type has been Deleted Successfully !');
     }
 }

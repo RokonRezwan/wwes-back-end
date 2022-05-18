@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Price;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Support\Str;
@@ -26,6 +27,7 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
+       // dd($request->all());
         $product = new Product; 
 
         //insert data
@@ -37,27 +39,27 @@ class ProductController extends Controller
         //save to database
         $product->save();
 
-       /*  // Product Price Type Store
-        $getAllPrices = $request->price;
-        $price_type_id = $request->price_type_id;
-        $active_date = $request->active_date;
+        // Product Price Type Store
+        $getAllPrices = $request->amount;
+        $price_type_ids = $request->price_type_id;
 
         $values = [];
 
-        foreach ($getAllPrices as $index => $price) {
-            $values[] = [
-                'product_id' => $product->id,
-                'price' => $price,
-                'price_type_id' => $price_type_id[$index],
-                'active_date' => $active_date[$index],
-            ];
+        if(($getAllPrices !== NULL) && ($price_type_ids !== NULL)){
+            foreach ($getAllPrices as $index => $amount) {
+                $values[] = [
+                    'product_id' => $product->id,
+                    'amount' => $amount,
+                    'price_type_id' => $price_type_ids[$index],
+                ];
+            }
         }
 
-        if ( ($price !== NULL) && ($price_type_id[$index] !== NULL) ){
-            $product->productPrices()->insert($values);
-        } */
+        if ( ($amount !== NULL) && ($price_type_ids[$index] !== NULL) ){
+            $product->prices()->insert($values);
+        }
 
-        return redirect('http://127.0.0.1:7000/')->with('status','Product has been Created Successfully !');
+        return redirect('http://127.0.0.1:7000/products/index')->with('status','Product has been Created Successfully !');
     }
 
     public function show(Product $product)
@@ -85,18 +87,32 @@ class ProductController extends Controller
         //save to database
         $product->update();
 
-        return response()->json([
-            'message' => "Product updated Successfully!!",
-            'product' => $product
-        ], 200);
+        // Update Prices
+        $product_price_ids = $request->product_price_id;
+
+        if($product_price_ids){
+            for ($i = 0; $i < count($product_price_ids); $i++) {
+
+                $values = [
+                    'product_id' => $product->id,
+                    'amount' => $request->amount[$i],
+                ];
+
+                $check_id = Price::find($product_price_ids[$i]);
+
+                if ($check_id) {
+                    $product->prices()->where('id', $check_id->id)->update($values);
+                }
+            }
+        }
+
+        return redirect('http://127.0.0.1:7000/products/index')->with('status','Product has been Updated Successfully !');
     }
 
     public function destroy(Product $product)
     {
         $product->delete();
 
-        return response()->json([
-            'message' => "Product Deleted Successfully!!",
-        ], 200);
+        return redirect('http://127.0.0.1:7000/products/index')->with('status','Product has been Deleted Successfully !');
     }
 }
