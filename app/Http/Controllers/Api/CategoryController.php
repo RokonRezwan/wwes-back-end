@@ -24,7 +24,7 @@ class CategoryController extends Controller
         //
     }
 
-    public function store(CategoryStoreRequest $request)
+    public function store(StoreCategoryRequest $request)
     {
         $category = new Category; 
 
@@ -51,7 +51,7 @@ class CategoryController extends Controller
         //
     }
 
-    public function update(CategoryStoreRequest $request, Category $category)
+    public function update(UpdateCategoryRequest $request, Category $category)
     {
         //insert data
         $category->name = $request->name;

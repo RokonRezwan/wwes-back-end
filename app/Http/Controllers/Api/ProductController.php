@@ -8,13 +8,15 @@ use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Product\StoreProductRequest;
+use App\Http\Requests\Product\UpdateProductRequest;
 
 class ProductController extends Controller
 {
     public function index()
     {
         $products = Product::with('category','prices')->get();
-
+        
         return response()->json([
             'product' => $products
         ], 200);
@@ -25,16 +27,25 @@ class ProductController extends Controller
         
     }
 
-    public function store(Request $request)
+    public function store(StoreProductRequest $request)
     {
-       // dd($request->all());
+        $imageName = NULL;
+
+            if($request->hasFile('image')){
+                $image = $request->file('image');
+                $imageName = $this->_getFileName($image->getClientOriginalExtension());
+                $image->move(public_path('product-images'), $imageName);
+            }
+
         $product = new Product; 
 
         //insert data
         $product->name = $request->name;
         $product->category_id = $request->category_id;
         $product->slug = Str::slug($request->name);
+        $product->image = $imageName;
         $product->description = $request->description;
+
 
         //save to database
         $product->save();
@@ -76,8 +87,22 @@ class ProductController extends Controller
         //
     }
 
-    public function update(Request $request, Product $product)
+    public function update(UpdateProductRequest $request, Product $product)
     {
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = $this->_getFileName($image->getClientOriginalExtension());
+            $image->move(public_path('product-images'), $imageName);
+
+            if ($product->image !== NULL) {
+                if (file_exists(public_path('product-images/'. $product->image ))) {
+                    unlink(public_path('product-images/'. $product->image ));
+                }
+            }
+
+            $product->image = $imageName;
+        }
+
         //insert data
         $product->name = $request->name;
         $product->category_id = $request->category_id;
@@ -88,7 +113,7 @@ class ProductController extends Controller
         $product->update();
 
         // Update Prices
-        $product_price_ids = $request->product_price_id;
+        /* $product_price_ids = $request->product_price_id;
 
         if($product_price_ids){
             for ($i = 0; $i < count($product_price_ids); $i++) {
@@ -104,7 +129,7 @@ class ProductController extends Controller
                     $product->prices()->where('id', $check_id->id)->update($values);
                 }
             }
-        }
+        } */
 
         return redirect('http://127.0.0.1:7000/products/index')->with('status','Product has been Updated Successfully !');
     }
@@ -114,5 +139,10 @@ class ProductController extends Controller
         $product->delete();
 
         return redirect('http://127.0.0.1:7000/products/index')->with('status','Product has been Deleted Successfully !');
+    }
+    private function _getFileName($fileExtension){
+
+        // Image name format is - p-05042022121515.jpg
+        return 'p-'. date("dmYhis") . '.' . $fileExtension;
     }
 }

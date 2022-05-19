@@ -22,7 +22,7 @@ class PriceTypeController extends Controller
         
     }
 
-    public function store(Request $request)
+    public function store(StorePriceTypeRequest $request)
     {
         $priceType = new PriceType; 
 
@@ -48,7 +48,7 @@ class PriceTypeController extends Controller
         //
     }
 
-    public function update(Request $request, PriceType $priceType)
+    public function update(UpdatePriceTypeRequest $request, PriceType $priceType)
     {
         //insert data
         $priceType->name = $request->name;
