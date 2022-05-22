@@ -32,7 +32,7 @@ class PriceTypeController extends Controller
         //save to database
         $priceType->save();
 
-        return redirect('http://127.0.0.1:7000/price-types/index')->with('status','Price Type has been Created Successfully !');
+        return redirect(config('app.frontend_url').'/price-types/index')->with('status','Price Type has been Created Successfully !');
     }
 
     public function show(PriceType $priceType)
@@ -56,13 +56,22 @@ class PriceTypeController extends Controller
         //save to database
         $priceType->update();
 
-        return redirect('http://127.0.0.1:7000/price-types/index')->with('status','Price Type has been Updated Successfully !');
+        return redirect(config('app.frontend_url').'/price-types/index')->with('status','Price Type has been Updated Successfully !');
     }
 
     public function destroy(PriceType $priceType)
     {
         $priceType->delete();
 
-        return redirect('http://127.0.0.1:7000/price-types/index')->with('status','Price Type has been Deleted Successfully !');
+        return redirect(config('app.frontend_url').'/price-types/index')->with('status','Price Type has been Deleted Successfully !');
+    }
+
+    public function toggleStatus(PriceType $priceType)
+    {
+        $priceType->is_active = !$priceType->is_active;
+
+        $priceType->update();
+
+        return redirect(config('app.frontend_url').'/price-types/index')->with('status','PriceType Status has been Toggled Successfully !');
     }
 }

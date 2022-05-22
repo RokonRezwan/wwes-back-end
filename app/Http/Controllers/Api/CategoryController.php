@@ -6,7 +6,8 @@ use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CategoryStoreRequest;
+use App\Http\Requests\Category\StoreCategoryRequest;
+use App\Http\Requests\Category\UpdateCategoryRequest;
 
 class CategoryController extends Controller
 {
@@ -35,7 +36,7 @@ class CategoryController extends Controller
         //save to database
         $category->save();
 
-        return redirect('http://127.0.0.1:7000/categories/index')->with('status','Category has been Created Successfully !');
+        return redirect(config('app.frontend_url').'/categories/index')->with('status','Category has been Created Successfully !');
     }
 
     public function show(Category $category)
@@ -60,13 +61,23 @@ class CategoryController extends Controller
         //save to database
         $category->update();
 
-        return redirect('http://127.0.0.1:7000/categories/index')->with('status','Category has been Updated Successfully !');
+        return redirect(config('app.frontend_url').'/categories/index')->with('status','Category has been Updated Successfully !');
     }
 
     public function destroy(Category $category)
     {
         $category->delete();
 
-        return redirect('http://127.0.0.1:7000/categories/index')->with('status','Category has been Deleted Successfully !');
+        return redirect(config('app.frontend_url').'/categories/index')->with('status','Category has been Deleted Successfully !');
+    }
+
+    public function toggleStatus(Category $category)
+    {
+        $category->is_active = !$category->is_active;
+        
+
+        $category->update();
+
+        return redirect(config('app.frontend_url').'/categories/index')->with('status','Category STatus has been Toggled Successfully !');
     }
 }

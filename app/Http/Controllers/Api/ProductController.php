@@ -70,7 +70,7 @@ class ProductController extends Controller
             $product->prices()->insert($values);
         }
 
-        return redirect('http://127.0.0.1:7000/products/index')->with('status','Product has been Created Successfully !');
+        return redirect(config('app.frontend_url').'/products/index')->with('status','Product has been Created Successfully !');
     }
 
     public function show(Product $product)
@@ -113,7 +113,7 @@ class ProductController extends Controller
         $product->update();
 
         // Update Prices
-        /* $product_price_ids = $request->product_price_id;
+        $product_price_ids = $request->product_price_id;
 
         if($product_price_ids){
             for ($i = 0; $i < count($product_price_ids); $i++) {
@@ -129,17 +129,43 @@ class ProductController extends Controller
                     $product->prices()->where('id', $check_id->id)->update($values);
                 }
             }
-        } */
+        }
 
-        return redirect('http://127.0.0.1:7000/products/index')->with('status','Product has been Updated Successfully !');
+        $price_type_new_ids = $request->price_type_new_id;
+
+            if($price_type_new_ids){
+                for ($i = 0; $i < count($price_type_new_ids); $i++) {
+                    $values2 = [
+                        'product_id' => $product->id,
+                        'amount' => $request->new_amount[$i],
+                        'price_type_id' => $request->price_type_new_id[$i],
+                    ];
+
+                    if ( ($request->new_amount[$i] !== NULL) && ($request->price_type_new_id[$i] !== NULL) ){
+                      $product->prices()->insert($values2);
+                    }
+                }
+            }
+
+        return redirect(config('app.frontend_url').'/products/index')->with('status','Product has been Updated Successfully !');
     }
 
     public function destroy(Product $product)
     {
         $product->delete();
 
-        return redirect('http://127.0.0.1:7000/products/index')->with('status','Product has been Deleted Successfully !');
+        return redirect(config('app.frontend_url').'/products/index')->with('status','Product has been Deleted Successfully !');
     }
+
+    public function toggleStatus(Product $product)
+    {
+        $product->is_active = !$product->is_active;
+
+        $product->update();
+
+        return redirect(config('app.frontend_url').'/products/index')->with('status','Product Status has been Toggled Successfully !');
+    }
+
     private function _getFileName($fileExtension){
 
         // Image name format is - p-05042022121515.jpg
