@@ -28,7 +28,7 @@ return new class extends Migration
             ->onDelete('restrict');
             $table->foreign('price_type_id')->references('id')->on('price_types')->onUpdate('cascade')->onDelete('restrict');
 
-            $table->unique(['product_id', 'product_type_id'], 'unique_identifier');
+            $table->unique(['product_id', 'price_type_id'], 'unique_identifier');
         });
     }
 

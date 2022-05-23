@@ -22,11 +22,6 @@ class ProductController extends Controller
         ], 200);
     }
 
-    public function create()
-    {
-        
-    }
-
     public function store(StoreProductRequest $request)
     {
         $imageName = NULL;
@@ -80,11 +75,6 @@ class ProductController extends Controller
             'message' => "Product Showed Successfully!!",
             'product' => $product
         ], 200);
-    }
-
-    public function edit(Product $product)
-    {
-        //
     }
 
     public function update(UpdateProductRequest $request, Product $product)
@@ -164,6 +154,16 @@ class ProductController extends Controller
         $product->update();
 
         return redirect(config('app.frontend_url').'/products/index')->with('status','Product Status has been Toggled Successfully !');
+    }
+
+    public function priceListDestroy($price_id)
+    {
+        $price = Price::find($price_id);
+        $price->delete();
+
+        return response()->json([
+            'success' => 'Product Price Deleted Successfully !'
+        ]);
     }
 
     private function _getFileName($fileExtension){

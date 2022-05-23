@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use App\Models\PriceType;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\PriceType\StorePriceTypeRequest;
+use App\Http\Requests\PriceType\UpdatePriceTypeRequest;
 
 class PriceTypeController extends Controller
 {

@@ -20,11 +20,6 @@ class CategoryController extends Controller
         ], 200);
     }
 
-    public function create()
-    {
-        //
-    }
-
     public function store(StoreCategoryRequest $request)
     {
         $category = new Category; 
@@ -45,11 +40,6 @@ class CategoryController extends Controller
             'message' => "Category Showed Successfully!!",
             'category' => $category
         ], 200);
-    }
-
-    public function edit(Category $category)
-    {
-        //
     }
 
     public function update(UpdateCategoryRequest $request, Category $category)
